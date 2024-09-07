@@ -89,5 +89,4 @@ if not firebase_admin._apps:
 print(CLOUDRUN_SERVICE_URL)
 print(GOOGLE_CLOUD_PROJECT)
 print(ALLOWED_HOSTS)
-print(CSRF_TRUSTED_ORIGINS)
 print(CORS_ALLOW_ALL_ORIGINS)
