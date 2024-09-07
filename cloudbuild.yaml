@@ -28,6 +28,7 @@ steps:
       - db_password
       - db_host
       - firebase_service_account
+      - api-cloudrun-service-url
 
   # Run database migrations
   - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
@@ -43,6 +44,7 @@ steps:
       - db_password
       - db_host
       - firebase_service_account
+      - api-cloudrun-service-url
 
   # Deploy container image to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
