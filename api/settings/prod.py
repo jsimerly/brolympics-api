@@ -35,12 +35,11 @@ class ProductionConfig(BaseConfig):
 
     if CLOUDRUN_SERVICE_URL:
         ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
-        CSRF_TRUSTED_ORIGINS = [ALLOWED_HOSTS]
+        CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS.append("brolympics-api-708202517048.us-east5.run.app")
         SECURE_SSL_REDIRECT = True
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     else:
-        ALLOWED_HOSTS = ["*"]
-        SECURE_SSL_REDIRECT = False
+        raise ValueError("CLOUDRUN_SERVICE_URL must not be null.")
 
     SECRET_KEY = access_secret_version("django_secret_key")
 
@@ -57,8 +56,11 @@ class ProductionConfig(BaseConfig):
     # CORS settings
     CORS_ALLOW_ALL_ORIGINS = False
     CORS_ALLOWED_ORIGINS = [
-        ALLOWED_HOSTS
+        "https://brolympics-api-s7dp3idmra-ul.a.run.app",
+        "https://brolympics-frontend-708202517048.us-east5.run.app",
+        "https://brolympic.com", 
     ]
+    CORS_ALLOW_CREDENTIALS = True
 
     CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
@@ -73,9 +75,6 @@ class ProductionConfig(BaseConfig):
         'x-csrftoken',
         'x-requested-with',
     ]
-
-    CORS_ALLOW_CREDENTIALS = True
-    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
 # Firebase initialization for production
 FIREBASE_STORAGE_BUCKET = access_secret_version("firebase_storage_bucket")
