@@ -7,7 +7,6 @@ import firebase_admin
 from firebase_admin import credentials
 from urllib.parse import urlparse
 
-
 logging.basicConfig(level=logging.INFO)
 
 GOOGLE_CLOUD_PROJECT = os.environ.get('GOOGLE_CLOUD_PROJECT')
@@ -35,7 +34,7 @@ class ProductionConfig(BaseConfig):
 
     if CLOUDRUN_SERVICE_URL:
         ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
-        CSRF_TRUSTED_ORIGINS = ALLOWED_HOSTS.append("brolympics-api-708202517048.us-east5.run.app")
+        CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS]
         SECURE_SSL_REDIRECT = True
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     else:
@@ -61,7 +60,6 @@ class ProductionConfig(BaseConfig):
         "https://brolympic.com", 
     ]
     CORS_ALLOW_CREDENTIALS = True
-
     CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
     CORS_ALLOW_HEADERS = [
