@@ -76,3 +76,8 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_credentials)
     firebase_admin.initialize_app(cred, {'storageBucket': FIREBASE_STORAGE_BUCKET})
 
+print(CLOUDRUN_SERVICE_URL)
+print(GOOGLE_CLOUD_PROJECT)
+print(ALLOWED_HOSTS)
+print(CSRF_TRUSTED_ORIGINS)
+print(CORS_ALLOW_ALL_ORIGINS)
