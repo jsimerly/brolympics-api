@@ -10,6 +10,7 @@ load_dotenv(dotenv_path)
 SECRET_KEY = os.environ.get("SECRET_KEY")
 FIREBASE_STORAGE_BUCKET = os.environ.get("FIREBASE_STORAGE_BUCKET")
 
+ENV_TYPE = "DEV"
 DEBUG = True
 ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 SECRET_KEY = SECRET_KEY

@@ -61,7 +61,7 @@ steps:
       - "--set-env-vars"
       - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
       - "--set-secrets"
-      - "firebase_service_account=firebase_service_account:latest,django_secret_key=django_secret_key:latest,firebase_storage_bucket=firebase_storage_bucket:latest,db_name=db_name:latest,db_user=db_user:latest,db_password=db_password:latest,db_host=db_host:latest"
+      - "firebase_service_account=firebase_service_account:latest,django_secret_key=django_secret_key:latest,firebase_storage_bucket=firebase_storage_bucket:latest,db_name=db_name:latest,db_user=db_user:latest,db_password=db_password:latest,db_host=db_host:latest,api-cloudrun-service-url=api-cloudrun-service-url:latest"
 
 images:
   - "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
@@ -85,3 +85,5 @@ availableSecrets:
       env: "db_host"
     - versionName: projects/$PROJECT_ID/secrets/firebase_service_account/versions/latest
       env: "firebase_service_account"
+    - versionName: projects/$PROJECT_ID/secrets/api-cloudrun-service-url/versions/latest
+      env: "api-cloudrun-service-url"

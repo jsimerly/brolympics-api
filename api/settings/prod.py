@@ -16,6 +16,7 @@ def access_secret_version(secret_id, version_id="latest"):
     response = client.access_secret_version(request={"name": name})
     return response.payload.data.decode("UTF-8")
 
+ENV_TYPE = "PROD"
 SECRET_KEY = access_secret_version("django_secret_key")
 DEBUG = True
 

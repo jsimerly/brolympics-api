@@ -20,11 +20,13 @@ from django.conf import settings
 from django.conf.urls.static import static
 from api.csrf import set_csrf_token
 
+API_PREFIX = 'api/' if settings.ENV_TYPE == "DEV" else ""
+
 urlpatterns = [
-    path('api/admin/', admin.site.urls),
-    path('api/auth/', include('apps.authentication.urls')),
-    path('api/brolympics/', include('apps.brolympics.urls')),
-    path('api/set-csrf-token/', set_csrf_token)
+    path(f'{API_PREFIX}admin/', admin.site.urls),
+    path(f'{API_PREFIX}auth/', include('apps.authentication.urls')),
+    path(f'{API_PREFIX}brolympics/', include('apps.brolympics.urls')),
+    path(f'{API_PREFIX}set-csrf-token/', set_csrf_token)
 ]
 
 if settings.DEBUG:
