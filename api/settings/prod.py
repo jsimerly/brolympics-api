@@ -11,7 +11,7 @@ logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 DEBUG = False
-ALLOWED_HOSTS = ['your-cloud-run-url.a.run.app']  # Update once we get a cloud run URL
+ALLOWED_HOSTS = ['https://brolympics-api-708202517048.us-east5.run.app']  # Update once we get a cloud run URL
 
 def access_secret_version(secret_id, version_id="latest"):
     try:
