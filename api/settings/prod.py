@@ -21,7 +21,7 @@ def access_secret_version(secret_id, version_id="latest"):
     response = client.access_secret_version(request={"name": name})
     return response.payload.data.decode("UTF-8")
 
-CLOUDRUN_SERVICE_URL = os.environ.get("CLOUDRUN_SERVICE_URL")
+CLOUDRUN_SERVICE_URL = "https://brolympics-api-s7dp3idmra-ul.a.run.app"
 logging.info(f"CLOUDRUN_SERVICE_URL: {CLOUDRUN_SERVICE_URL}")
 
 class ProductionConfig(BaseConfig):
