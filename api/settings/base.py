@@ -29,6 +29,7 @@ class BaseConfig:
 
     MIDDLEWARE = [
         'api.custom_middleware.loggers.RequestLoggingMiddleware',
+        'api.custom_middleware.loggers.RedirectLoggingMiddleware',
 
         'django.middleware.security.SecurityMiddleware',
         'corsheaders.middleware.CorsMiddleware',
