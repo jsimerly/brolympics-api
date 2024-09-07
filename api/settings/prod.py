@@ -22,7 +22,7 @@ DEBUG = True
 if "api" not in INSTALLED_APPS:
     INSTALLED_APPS.append("api")
 
-CLOUDRUN_SERVICE_URL = os.environ.get("CLOUDRUN_SERVICE_URL", default=None)
+CLOUDRUN_SERVICE_URL = access_secret_version("api-cloudrun-service-url")
 if CLOUDRUN_SERVICE_URL:
     ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
     CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
