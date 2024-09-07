@@ -4,7 +4,7 @@ from firebase_admin import credentials
 from urllib.parse import urlparse
 from google.cloud import secretmanager
 
-from base import *
+from .base import *
 
 GOOGLE_CLOUD_PROJECT = os.environ.get('GOOGLE_CLOUD_PROJECT')
 def access_secret_version(secret_id, version_id="latest"):
