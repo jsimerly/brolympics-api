@@ -59,7 +59,7 @@ steps:
       - "managed"
       - "--allow-unauthenticated"
       - "--set-env-vars"
-      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
+      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID,CLOUDRUN_SERVICE_URL=$SERVICE_URL"
       - "--set-secrets"
       - "firebase_service_account=firebase_service_account:latest,django_secret_key=django_secret_key:latest,firebase_storage_bucket=firebase_storage_bucket:latest,db_name=db_name:latest,db_user=db_user:latest,db_password=db_password:latest,db_host=db_host:latest"
 

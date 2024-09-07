@@ -5,9 +5,16 @@ from google.cloud import secretmanager
 import json
 import firebase_admin
 from firebase_admin import credentials
+from urllib.parse import urlparse
 
-DEBUG = True
-ALLOWED_HOSTS = ['brolympics-api-708202517048.us-east5.run.app']
+CLOUDRUN_SERVICE_URL = os.environ.get("CLOUDRUN_SERVICE_URL")
+if CLOUDRUN_SERVICE_URL:
+    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
+    CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
+    SECURE_SSL_REDIRECT = True
+    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+else:
+    ALLOWED_HOSTS = ["*"]
 
 def access_secret_version(secret_id, version_id="latest"):
     client = secretmanager.SecretManagerServiceClient()
@@ -37,7 +44,6 @@ DATABASES = {
 SECURE_SSL_REDIRECT = False
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 USE_X_FORWARDED_HOST = True
-
 
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
