@@ -11,14 +11,10 @@ RUN apt-get update && apt-get install -y \
     gcc \
     libpq-dev \
     python3-dev \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /api/
 RUN pip install --upgrade pip && pip install -r requirements.txt
-
-RUN curl https://sdk.cloud.google.com | bash && \
-    echo "source /root/google-cloud-sdk/path.bash.inc" >> ~/.bashrc
 
 COPY . /api/
 
