@@ -33,7 +33,7 @@ ALLOWED_HOSTS = [
 CLOUDRUN_SERVICE_URL = access_secret_version("api-cloudrun-service-url")
 if CLOUDRUN_SERVICE_URL:
     ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
-    USE_X_FORWARDED_HOST = True
+    SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 else:
     raise ValueError("Must have cloudrun service url.")
