@@ -7,6 +7,7 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"]
 
+  # Debug step: Print environment variables
   - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
     entrypoint: "sh"
     args:
@@ -31,25 +32,6 @@ steps:
         "--dry-run",
         "--settings=api.settings.prod",
       ]
-    secretEnv:
-      - django_secret_key
-      - firebase_storage_bucket
-      - db_name
-      - db_user
-      - db_password
-      - db_host
-
-  # Run database migrations
-  - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
-    entrypoint: "python"
-    args:
-      [
-        "manage.py",
-        "makemigrations",
-        "--check",
-        "--dry-run",
-        "--settings=api.settings.prod",
-      ]
     env:
       - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
     secretEnv:
@@ -64,9 +46,9 @@ steps:
   # Run database migrations
   - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
     entrypoint: "python"
-    args: ["manage.py", "migrate"]
+    args: ["manage.py", "migrate", "--settings=api.settings.prod"]
     env:
-      - "DJANGO_SETTINGS_MODULE=api.settings.prod"
+      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
     secretEnv:
       - django_secret_key
       - firebase_storage_bucket
@@ -74,6 +56,7 @@ steps:
       - db_user
       - db_password
       - db_host
+      - firebase_service_account
 
   # Deploy container image to Cloud Run
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
@@ -89,6 +72,8 @@ steps:
       - "--platform"
       - "managed"
       - "--allow-unauthenticated"
+      - "--set-env-vars"
+      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
       - "--set-secrets"
       - "firebase_service_account=firebase_service_account:latest,django_secret_key=django_secret_key:latest,firebase_storage_bucket=firebase_storage_bucket:latest,db_name=db_name:latest,db_user=db_user:latest,db_password=db_password:latest,db_host=db_host:latest"
 
