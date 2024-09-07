@@ -90,9 +90,3 @@ class BaseConfig:
     FIREBASE_STORAGE_BUCKET = None
     FIREBASE_CREDENTIALS_PATH = None
 
-base_settings = BaseConfig()
-
-# Make all attributes of BaseConfig available at the module level
-for setting in dir(base_settings):
-    if setting.isupper():
-        locals()[setting] = getattr(base_settings, setting)

@@ -7,61 +7,72 @@ import firebase_admin
 from firebase_admin import credentials
 from urllib.parse import urlparse
 
-CLOUDRUN_SERVICE_URL = os.environ.get("CLOUDRUN_SERVICE_URL")
-if CLOUDRUN_SERVICE_URL:
-    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-else:
-    ALLOWED_HOSTS = ["*"]
 
+logging.basicConfig(level=logging.INFO)
+
+GOOGLE_CLOUD_PROJECT = os.environ.get('GOOGLE_CLOUD_PROJECT')
+logging.info(f"GOOGLE_CLOUD_PROJECT: {GOOGLE_CLOUD_PROJECT}")
 def access_secret_version(secret_id, version_id="latest"):
     client = secretmanager.SecretManagerServiceClient()
-    project_id = os.environ.get('GOOGLE_CLOUD_PROJECT')
+    project_id = GOOGLE_CLOUD_PROJECT
     if not project_id:
         raise ValueError("GOOGLE_CLOUD_PROJECT environment variable is not set")
     name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"
     response = client.access_secret_version(request={"name": name})
     return response.payload.data.decode("UTF-8")
 
-SECRET_KEY = access_secret_version("django_secret_key")
+CLOUDRUN_SERVICE_URL = os.environ.get("CLOUDRUN_SERVICE_URL")
+logging.info(f"CLOUDRUN_SERVICE_URL: {CLOUDRUN_SERVICE_URL}")
 
+class ProductionConfig(BaseConfig):
+    def __init__(self) -> None:
+        super().__init__()
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': access_secret_version('db_name'),
-        'USER': access_secret_version('db_user'),
-        'PASSWORD': access_secret_version('db_password'),
-        'HOST': access_secret_version('db_host'),
+    if CLOUDRUN_SERVICE_URL:
+        ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
+        CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
+        SECURE_SSL_REDIRECT = True
+        SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+    else:
+        ALLOWED_HOSTS = ["*"]
+        SECURE_SSL_REDIRECT = False
+
+    SECRET_KEY = access_secret_version("django_secret_key")
+
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql',
+            'NAME': access_secret_version('db_name'),
+            'USER': access_secret_version('db_user'),
+            'PASSWORD': access_secret_version('db_password'),
+            'HOST': access_secret_version('db_host'),
+        }
     }
-}
 
-# CORS settings
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    "https://brolympics-api-s7dp3idmra-ul.a.run.app",
-    "https://brolympics-frontend-708202517048.us-east5.run.app",
-    "https://brolympic.com", 
-]
+    # CORS settings
+    CORS_ALLOW_ALL_ORIGINS = False
+    CORS_ALLOWED_ORIGINS = [
+        "https://brolympics-api-s7dp3idmra-ul.a.run.app",
+        "https://brolympics-frontend-708202517048.us-east5.run.app",
+        "https://brolympic.com", 
+    ]
 
-CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+    CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
+    CORS_ALLOW_HEADERS = [
+        'accept',
+        'accept-encoding',
+        'authorization',
+        'content-type',
+        'dnt',
+        'origin',
+        'user-agent',
+        'x-csrftoken',
+        'x-requested-with',
+    ]
 
-CORS_ALLOW_CREDENTIALS = True
-CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+    CORS_ALLOW_CREDENTIALS = True
+    CSRF_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
 
 # Firebase initialization for production
 FIREBASE_STORAGE_BUCKET = access_secret_version("firebase_storage_bucket")
@@ -70,6 +81,12 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_credentials)
     firebase_admin.initialize_app(cred, {'storageBucket': FIREBASE_STORAGE_BUCKET})
 
-logging.info(f"prod.py ALLOWED_HOSTS: {ALLOWED_HOSTS}")
-logging.info(f"prod.py CSRF_TRUSTED_ORIGINS: {CSRF_TRUSTED_ORIGINS}")
-logging.info(f"prod.py SECURE_SSL_REDIRECT: {SECURE_SSL_REDIRECT}")
+prod_settings = ProductionConfig()
+# Make all attributes of BaseConfig available at the module level
+for setting in dir(prod_settings):
+    if setting.isupper():
+        locals()[setting] = getattr(prod_settings, setting)
+
+logging.info(f"prod.py ALLOWED_HOSTS: {prod_settings.ALLOWED_HOSTS}")
+logging.info(f"prod.py CSRF_TRUSTED_ORIGINS: {prod_settings.CSRF_TRUSTED_ORIGINS}")
+logging.info(f"prod.py SECURE_SSL_REDIRECT: {prod_settings.SECURE_SSL_REDIRECT}")

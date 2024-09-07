@@ -11,7 +11,7 @@ from apps.authentication.firebase import FirebaseAuthentication
 from rest_framework import status
 import logging
 from firebase_admin import auth, storage
-from api.settings.base import FIREBASE_STORAGE_BUCKET
+from django.conf import settings
 
 from .serializers import UserSerializer
 
