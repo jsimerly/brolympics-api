@@ -28,9 +28,14 @@ class ProductionConfig(BaseConfig):
     def __init__(self) -> None:
         super().__init__()
 
+    ALLOWED_HOSTS = [
+        "brolympics-api-708202517048.us-east5.run.app",
+        "brolympic.com", 
+    ]
+
     if CLOUDRUN_SERVICE_URL:
-        ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc, "brolympics-api-708202517048.us-east5.run.app"]
-        CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL, "brolympics-api-708202517048.us-east5.run.app"]
+        ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
+        CSRF_TRUSTED_ORIGINS = [ALLOWED_HOSTS]
         SECURE_SSL_REDIRECT = True
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     else:
@@ -52,9 +57,7 @@ class ProductionConfig(BaseConfig):
     # CORS settings
     CORS_ALLOW_ALL_ORIGINS = False
     CORS_ALLOWED_ORIGINS = [
-        "https://brolympics-api-s7dp3idmra-ul.a.run.app",
-        "https://brolympics-frontend-708202517048.us-east5.run.app",
-        "https://brolympic.com", 
+        ALLOWED_HOSTS
     ]
 
     CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
