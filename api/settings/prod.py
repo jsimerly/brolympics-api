@@ -70,6 +70,6 @@ if not firebase_admin._apps:
     cred = credentials.Certificate(firebase_credentials)
     firebase_admin.initialize_app(cred, {'storageBucket': FIREBASE_STORAGE_BUCKET})
 
-logging.info(f"ALLOWED_HOSTS: {ALLOWED_HOSTS}")
-logging.info(f"CSRF_TRUSTED_ORIGINS: {CSRF_TRUSTED_ORIGINS}")
-logging.info(f"SECURE_SSL_REDIRECT: {SECURE_SSL_REDIRECT}")
+logging.info(f"prod.py ALLOWED_HOSTS: {ALLOWED_HOSTS}")
+logging.info(f"prod.py CSRF_TRUSTED_ORIGINS: {CSRF_TRUSTED_ORIGINS}")
+logging.info(f"prod.py SECURE_SSL_REDIRECT: {SECURE_SSL_REDIRECT}")
