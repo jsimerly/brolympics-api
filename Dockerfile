@@ -18,4 +18,4 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /api
 
-CMD pyhon manage.py runserver --settings=api.settings.prod
+CMD python manage.py runserver 0.0.0.0:$PORT --settings=api.settings.prod
