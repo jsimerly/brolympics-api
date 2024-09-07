@@ -18,4 +18,4 @@ RUN pip install --upgrade pip && pip install -r requirements.txt
 
 COPY . /api
 
-CMD python manage.py runserver 0.0.0.0:$PORT --settings=api.settings.prod
+CMD gunicorn api.wsgi:application --env DJANGO_SETTINGS_MODULE=api.settings.prod --bind 0.0.0.0:$PORT
