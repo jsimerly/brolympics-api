@@ -22,10 +22,10 @@ from api.csrf import set_csrf_token
 
 
 urlpatterns = [
-    path('api/admin/', admin.site.urls),
-    path('api/auth/', include('apps.authentication.urls')),
-    path('api/brolympics/', include('apps.brolympics.urls')),
-    path('api/set-csrf-token/', set_csrf_token)
+    path('/api/admin/', admin.site.urls),
+    path('/api/auth/', include('apps.authentication.urls')),
+    path('/api/brolympics/', include('apps.brolympics.urls')),
+    path('/api/set-csrf-token/', set_csrf_token)
 ]
 
 if settings.DEBUG:
