@@ -27,6 +27,7 @@ ALLOWED_HOSTS = [
     "brolympics-api-s7dp3idmra-ul.a.run.app",
     "brolympics-api-708202517048.us-east5.run.app",
     "brolympics-frontend-708202517048.us-east5.run.app",
+    "brolympics-frontend-s7dp3idmra-ul.a.run.app",
     "brolympic.com", 
 ]
 
@@ -63,6 +64,7 @@ CORS_ALLOWED_ORIGINS = [
     "https://brolympics-api-s7dp3idmra-ul.a.run.app",
     "https://brolympics-api-708202517048.us-east5.run.app",
     "https://brolympics-frontend-708202517048.us-east5.run.app",
+    "https://brolympics-frontend-s7dp3idmra-ul.a.run.app",
     "https://brolympic.com", 
 ]
 CORS_ALLOW_CREDENTIALS = True
