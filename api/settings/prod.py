@@ -31,6 +31,7 @@ class ProductionConfig(BaseConfig):
         "brolympics-api-708202517048.us-east5.run.app",
         "brolympic.com", 
     ]
+    DEBUG = True
 
     if CLOUDRUN_SERVICE_URL:
         ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
@@ -73,6 +74,20 @@ class ProductionConfig(BaseConfig):
         'x-csrftoken',
         'x-requested-with',
     ]
+
+    ALLOWED_HOSTS = ["*"]
+    CORS_ALLOW_ALL_ORIGINS = True
+    CORS_ALLOW_CREDENTIALS = True
+    CORS_ALLOW_HEADERS = ['*']
+    CORS_ALLOW_METHODS = ['*']
+
+    SECURE_SSL_REDIRECT = False
+    SECURE_PROXY_SSL_HEADER = None
+    SESSION_COOKIE_SECURE = False
+    CSRF_COOKIE_SECURE = False
+    CSRF_TRUSTED_ORIGINS = ['*']
+    CSRF_COOKIE_SAMESITE = None
+    SESSION_COOKIE_SAMESITE = None
 
 # Firebase initialization for production
 FIREBASE_STORAGE_BUCKET = access_secret_version("firebase_storage_bucket")
