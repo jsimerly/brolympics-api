@@ -16,7 +16,6 @@ RUN apt-get update && apt-get install -y \
 COPY requirements.txt /api/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-COPY . /api/
-
-RUN python manage.py collectstatic --noinput --settings=api.settings.prod
+COPY . /api
+# RUN python manage.py collectstatic --noinput --settings=api.settings.prod
 CMD gunicorn api.wsgi:application --env DJANGO_SETTINGS_MODULE=api.settings.prod --bind 0.0.0.0:$PORT
