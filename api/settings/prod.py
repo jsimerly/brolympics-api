@@ -17,6 +17,7 @@ def access_secret_version(secret_id, version_id="latest"):
     try:
         client = secretmanager.SecretManagerServiceClient()
         project_id = os.environ.get('GOOGLE_CLOUD_PROJECT')
+        print(project_id)
         if not project_id:
             raise ValueError("GOOGLE_CLOUD_PROJECT environment variable is not set")
         name = f"projects/{project_id}/secrets/{secret_id}/versions/{version_id}"

@@ -7,20 +7,6 @@ steps:
   - name: "gcr.io/cloud-builders/docker"
     args: ["push", "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"]
 
-  # Debug step: Print environment variables
-  - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
-    entrypoint: "sh"
-    args:
-      - "-c"
-      - |
-        echo "Debug information:"
-        echo "PROJECT_ID: $PROJECT_ID"
-        echo "REPO_NAME: $REPO_NAME"
-        echo "COMMIT_SHA: $COMMIT_SHA"
-        echo "GOOGLE_CLOUD_PROJECT: $GOOGLE_CLOUD_PROJECT"
-    env:
-      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
-
   # Create migrations with prod settings
   - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
     entrypoint: "python"
