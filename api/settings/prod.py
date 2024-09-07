@@ -38,22 +38,10 @@ DATABASES = {
     }
 }
 
-# Security settings
-
-#Turned off because we're using cloud run
-SECURE_SSL_REDIRECT = False
-SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-USE_X_FORWARDED_HOST = True
-
-SESSION_COOKIE_SECURE = True
-CSRF_COOKIE_SECURE = True
-SECURE_BROWSER_XSS_FILTER = True
-SECURE_CONTENT_TYPE_NOSNIFF = True
-X_FRAME_OPTIONS = 'DENY'
-
 # CORS settings
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
+    "https://brolympics-api-s7dp3idmra-ul.a.run.app",
     "https://brolympics-frontend-708202517048.us-east5.run.app",
     "https://brolympic.com", 
 ]
