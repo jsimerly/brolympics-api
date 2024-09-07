@@ -22,8 +22,5 @@ RUN curl https://sdk.cloud.google.com | bash && \
 
 COPY . /api/
 
-# Use production settings for collectstatic
 RUN python manage.py collectstatic --noinput --settings=api.settings.prod
-
-# Ensure gunicorn uses the production settings
 CMD gunicorn api.wsgi:application --env DJANGO_SETTINGS_MODULE=api.settings.prod --bind 0.0.0.0:$PORT
