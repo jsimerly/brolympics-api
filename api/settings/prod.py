@@ -35,7 +35,7 @@ class ProductionConfig(BaseConfig):
     if CLOUDRUN_SERVICE_URL:
         ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
         CSRF_TRUSTED_ORIGINS = [f"https://{host}" for host in ALLOWED_HOSTS]
-        SECURE_SSL_REDIRECT = True
+        SECURE_SSL_REDIRECT = False
         SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     else:
         raise ValueError("CLOUDRUN_SERVICE_URL must not be null.")
