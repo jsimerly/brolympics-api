@@ -7,14 +7,19 @@ import firebase_admin
 from firebase_admin import credentials
 from urllib.parse import urlparse
 
-CLOUDRUN_SERVICE_URL = os.environ.get("CLOUDRUN_SERVICE_URL")
-if CLOUDRUN_SERVICE_URL:
-    ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
-    CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
-    SECURE_SSL_REDIRECT = True
-    SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
-else:
-    ALLOWED_HOSTS = ["*"]
+# CLOUDRUN_SERVICE_URL = os.environ.get("CLOUDRUN_SERVICE_URL")
+# if CLOUDRUN_SERVICE_URL:
+#     ALLOWED_HOSTS = [urlparse(CLOUDRUN_SERVICE_URL).netloc]
+#     CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
+#     SECURE_SSL_REDIRECT = True
+#     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+# else:
+#     ALLOWED_HOSTS = ["*"]
+
+ALLOWED_HOSTS = ["*"]
+CSRF_TRUSTED_ORIGINS = ["*"]
+SECURE_SSL_REDIRECT = False
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 
 def access_secret_version(secret_id, version_id="latest"):
     client = secretmanager.SecretManagerServiceClient()
