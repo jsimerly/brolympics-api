@@ -59,7 +59,7 @@ steps:
       - "managed"
       - "--allow-unauthenticated"
       - "--set-env-vars"
-      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID,CLOUDRUN_SERVICE_URL=https://brolympics-api-708202517048.us-east5.run.app"
+      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID,CLOUDRUN_SERVICE_URL=https://brolympics-api-s7dp3idmra-ul.a.run.app"
       - "--set-secrets"
       - "firebase_service_account=firebase_service_account:latest,django_secret_key=django_secret_key:latest,firebase_storage_bucket=firebase_storage_bucket:latest,db_name=db_name:latest,db_user=db_user:latest,db_password=db_password:latest,db_host=db_host:latest"
 
