@@ -10,7 +10,14 @@ steps:
   # Create migrations with prod settings
   - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
     entrypoint: "python"
-    args: ["manage.py", "makemigrations", "--check", "--dry-run", "--settings=api.settings.prod"]
+    args:
+      [
+        "manage.py",
+        "makemigrations",
+        "--check",
+        "--dry-run",
+        "--settings=api.settings.prod",
+      ]
     secretEnv:
       - django_secret_key
       - firebase_storage_bucket
@@ -22,7 +29,16 @@ steps:
   # Run database migrations
   - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
     entrypoint: "python"
-    args: ["manage.py", "migrate", "--settings=api.settings.prod"]
+    args:
+      [
+        "manage.py",
+        "makemigrations",
+        "--check",
+        "--dry-run",
+        "--settings=api.settings.prod",
+      ]
+    env:
+      - "GOOGLE_CLOUD_PROJECT=$PROJECT_ID"
     secretEnv:
       - django_secret_key
       - firebase_storage_bucket
@@ -30,6 +46,7 @@ steps:
       - db_user
       - db_password
       - db_host
+      - firebase_service_account
 
   # Run database migrations
   - name: "gcr.io/$PROJECT_ID/$REPO_NAME:$COMMIT_SHA"
