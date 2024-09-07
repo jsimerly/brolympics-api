@@ -44,11 +44,12 @@ DATABASES = {
 }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = False
+CORS_ALLOW_ALL_ORIGINS = True #False
 CORS_ALLOWED_ORIGINS = [
-    "https://brolympics-api-s7dp3idmra-ul.a.run.app",
-    "https://brolympics-frontend-708202517048.us-east5.run.app",
-    "https://brolympic.com", 
+    # "https://brolympics-api-s7dp3idmra-ul.a.run.app",
+    # "https://brolympics-frontend-708202517048.us-east5.run.app",
+    # "https://brolympic.com", 
+    "*"
 ]
 
 CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
