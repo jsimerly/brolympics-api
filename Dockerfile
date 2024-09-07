@@ -7,16 +7,23 @@ ENV PATH $PATH:/root/google-cloud-sdk/bin
 
 WORKDIR /api
 
-RUN apt-get update && apt-get install -y gcc && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y \
+    gcc \
+    libpq-dev \
+    python3-dev \
+    curl \
+    && rm -rf /var/lib/apt/lists/*
 
 COPY requirements.txt /api/
 RUN pip install --upgrade pip && pip install -r requirements.txt
 
-RUN apt-get update && apt-get install -y curl && \
-    curl https://sdk.cloud.google.com | bash && \
+RUN curl https://sdk.cloud.google.com | bash && \
     echo "source /root/google-cloud-sdk/path.bash.inc" >> ~/.bashrc
 
 COPY . /api/
 
+# Use production settings for collectstatic
 RUN python manage.py collectstatic --noinput --settings=api.settings.prod
+
+# Ensure gunicorn uses the production settings
 CMD gunicorn api.wsgi:application --env DJANGO_SETTINGS_MODULE=api.settings.prod --bind 0.0.0.0:$PORT
