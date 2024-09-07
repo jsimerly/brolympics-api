@@ -23,12 +23,15 @@ DEBUG = True
 if "api" not in INSTALLED_APPS:
     INSTALLED_APPS.append("api")
 
-ALLOWED_HOSTS = ['brolympics-api-708202517048.us-east5.run.app']
+ALLOWED_HOSTS = [    
+    "brolympics-api-s7dp3idmra-ul.a.run.app",
+    "brolympics-frontend-708202517048.us-east5.run.app",
+    "brolympic.com", 
+]
 
 CLOUDRUN_SERVICE_URL = access_secret_version("api-cloudrun-service-url")
 if CLOUDRUN_SERVICE_URL:
     ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
-    CSRF_TRUSTED_ORIGINS = [CLOUDRUN_SERVICE_URL]
 else:
     ALLOWED_HOSTS = ["*"]
 
