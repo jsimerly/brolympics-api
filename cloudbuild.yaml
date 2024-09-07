@@ -99,3 +99,5 @@ availableSecrets:
       env: "db_password"
     - versionName: projects/$PROJECT_ID/secrets/db_host/versions/latest
       env: "db_host"
+    - versionName: projects/$PROJECT_ID/secrets/firebase_service_account/versions/latest
+      env: "firebase_service_account"
