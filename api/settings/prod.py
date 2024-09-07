@@ -41,7 +41,6 @@ class ProductionConfig(BaseConfig):
         raise ValueError("CLOUDRUN_SERVICE_URL must not be null.")
 
     SECRET_KEY = access_secret_version("django_secret_key")
-
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.postgresql',
@@ -87,6 +86,3 @@ for setting in dir(prod_settings):
     if setting.isupper():
         locals()[setting] = getattr(prod_settings, setting)
 
-logging.info(f"prod.py ALLOWED_HOSTS: {prod_settings.ALLOWED_HOSTS}")
-logging.info(f"prod.py CSRF_TRUSTED_ORIGINS: {prod_settings.CSRF_TRUSTED_ORIGINS}")
-logging.info(f"prod.py SECURE_SSL_REDIRECT: {prod_settings.SECURE_SSL_REDIRECT}")
