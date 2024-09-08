@@ -119,7 +119,7 @@ LOGGING = {
 
 
 # Add the custom middleware to MIDDLEWARE
-MIDDLEWARE.insert(0, 'api.custom_middleware.loggers.RequestHeaderLoggingMiddleware')
+MIDDLEWARE.insert(0, 'api.custom_middleware.loggers.RequestLoggingMiddleware')
 
 print(CLOUDRUN_SERVICE_URL)
 print(GOOGLE_CLOUD_PROJECT)
