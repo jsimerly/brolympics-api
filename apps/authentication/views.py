@@ -36,7 +36,7 @@ class SyncUserView(APIView):
 
 
 class UserView(APIView):
-    authentication_classes = [FirebaseAuthentication, SessionAuthentication]
+    authentication_classes = [FirebaseAuthentication]
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
@@ -50,7 +50,7 @@ class UserView(APIView):
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 class UserImageView(APIView):
-    authentication_classes = [FirebaseAuthentication, SessionAuthentication]
+    authentication_classes = [FirebaseAuthentication]
     permission_classes = [IsAuthenticated]
 
     def put(self, request):
