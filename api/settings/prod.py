@@ -95,7 +95,7 @@ MIDDLEWARE = [middleware for middleware in MIDDLEWARE if 'csrf' not in middlewar
 
 CSRF_COOKIE_SECURE = False
 CSRF_COOKIE_HTTPONLY = False
-CSRF_TRUSTED_ORIGINS = ['*']
+CSRF_TRUSTED_ORIGINS = ['http://*', 'https://*']
 
 
 FIREBASE_STORAGE_BUCKET = access_secret_version("firebase_storage_bucket")
