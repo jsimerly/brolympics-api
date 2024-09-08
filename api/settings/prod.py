@@ -1,5 +1,6 @@
 import os
 import json
+import logging
 from firebase_admin import credentials
 from urllib.parse import urlparse
 from google.cloud import secretmanager
@@ -39,8 +40,7 @@ if CLOUDRUN_SERVICE_URL:
 else:
     raise ValueError("Must have cloudrun service url.")
 
-
-if 'test' in sys.argv or 'test_coverage' in sys.argv:  # Identifies when we're running tests
+if 'test' in sys.argv or 'test_coverage' in sys.argv:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
@@ -87,6 +87,39 @@ if not firebase_admin._apps:
     firebase_credentials = json.loads(access_secret_version("firebase_service_account"))
     cred = credentials.Certificate(firebase_credentials)
     firebase_admin.initialize_app(cred, {'storageBucket': FIREBASE_STORAGE_BUCKET})
+
+# Logging configuration
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {process:d} {thread:d} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose',
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['console'],
+            'level': 'INFO',
+        },
+        'django.request': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+            'propagate': False,
+        },
+    },
+}
+
+
+# Add the custom middleware to MIDDLEWARE
+MIDDLEWARE.insert(0, 'api.custom_middleware.loggers.RequestHeaderLoggingMiddleware')
 
 print(CLOUDRUN_SERVICE_URL)
 print(GOOGLE_CLOUD_PROJECT)
