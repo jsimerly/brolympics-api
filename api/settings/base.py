@@ -7,6 +7,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 sys.path.insert(0, str(BASE_DIR / 'apps'))
 
 AUTH_USER_MODEL = 'authentication.FirebaseUser'
+DEFAULT_AUTHENTICATION_CLASSES='authentication.'
 
 INSTALLED_APPS = [
     'django.contrib.admin',

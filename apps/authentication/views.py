@@ -19,7 +19,7 @@ User = get_user_model()
 logger = logging.getLogger(__name__)
 
 class SyncUserView(APIView):
-    authentication_classes = [FirebaseAuthentication, SessionAuthentication]
+    authentication_classes = [FirebaseAuthentication]
     permission_classes = [IsAuthenticated]
 
     def post(self, request, *args, **kwargs):
