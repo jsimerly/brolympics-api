@@ -17,6 +17,29 @@ def access_secret_version(secret_id, version_id="latest"):
     response = client.access_secret_version(request={"name": name})
     return response.payload.data.decode("UTF-8")
 
+# ENV_TYPE = "PROD"
+# SECRET_KEY = access_secret_version("django_secret_key")
+# DEBUG = True
+
+# if "api" not in INSTALLED_APPS:
+#     INSTALLED_APPS.append("api")
+
+# ALLOWED_HOSTS = [    
+#     "brolympics-api-s7dp3idmra-ul.a.run.app",
+#     "brolympics-api-708202517048.us-east5.run.app",
+#     "brolympics-frontend-708202517048.us-east5.run.app",
+#     "brolympics-frontend-s7dp3idmra-ul.a.run.app",
+#     "brolympic.com", 
+# ]
+
+# CLOUDRUN_SERVICE_URL = access_secret_version("api-cloudrun-service-url")
+# if CLOUDRUN_SERVICE_URL:
+#     ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
+#     SECURE_SSL_REDIRECT = False
+#     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+# else:
+#     raise ValueError("Must have cloudrun service url.")
+
 ENV_TYPE = "PROD"
 SECRET_KEY = access_secret_version("django_secret_key")
 DEBUG = True
@@ -24,17 +47,11 @@ DEBUG = True
 if "api" not in INSTALLED_APPS:
     INSTALLED_APPS.append("api")
 
-ALLOWED_HOSTS = [    
-    "brolympics-api-s7dp3idmra-ul.a.run.app",
-    "brolympics-api-708202517048.us-east5.run.app",
-    "brolympics-frontend-708202517048.us-east5.run.app",
-    "brolympics-frontend-s7dp3idmra-ul.a.run.app",
-    "brolympic.com", 
-]
+# Allow all hosts
+ALLOWED_HOSTS = ['*']
 
 CLOUDRUN_SERVICE_URL = access_secret_version("api-cloudrun-service-url")
 if CLOUDRUN_SERVICE_URL:
-    ALLOWED_HOSTS.append(urlparse(CLOUDRUN_SERVICE_URL).netloc)
     SECURE_SSL_REDIRECT = False
     SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 else:
@@ -59,28 +76,27 @@ else:
     }
 
 # CORS settings
-CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = [
-    "https://brolympics-api-s7dp3idmra-ul.a.run.app",
-    "https://brolympics-api-708202517048.us-east5.run.app",
-    "https://brolympics-frontend-708202517048.us-east5.run.app",
-    "https://brolympics-frontend-s7dp3idmra-ul.a.run.app",
-    "https://brolympic.com", 
-]
-CORS_ALLOW_CREDENTIALS = True
-CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+# CORS_ALLOW_ALL_ORIGINS = False
+# CORS_ALLOWED_ORIGINS = [
+#     "https://brolympics-api-s7dp3idmra-ul.a.run.app",
+#     "https://brolympics-api-708202517048.us-east5.run.app",
+#     "https://brolympics-frontend-708202517048.us-east5.run.app",
+#     "https://brolympics-frontend-s7dp3idmra-ul.a.run.app",
+#     "https://brolympic.com", 
+# ]
 
-CORS_ALLOW_HEADERS = [
-    'accept',
-    'accept-encoding',
-    'authorization',
-    'content-type',
-    'dnt',
-    'origin',
-    'user-agent',
-    'x-csrftoken',
-    'x-requested-with',
-]
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+
+# CORS_ALLOW_CREDENTIALS = True
+# CORS_TRUSTED_ORIGINS = CORS_ALLOWED_ORIGINS
+
+MIDDLEWARE = [middleware for middleware in MIDDLEWARE if 'csrf' not in middleware.lower()]
+
+CSRF_COOKIE_SECURE = False
+CSRF_COOKIE_HTTPONLY = False
+CSRF_TRUSTED_ORIGINS = ['*']
+
 
 FIREBASE_STORAGE_BUCKET = access_secret_version("firebase_storage_bucket")
 if not firebase_admin._apps:
