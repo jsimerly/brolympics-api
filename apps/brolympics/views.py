@@ -46,7 +46,6 @@ def convert_to_img_file(base_64_img, quality=85):
 
 
 # Create your views here.
-
 class CreateAllLeagueView(APIView):
     permission_classes = [IsAuthenticated]
 
