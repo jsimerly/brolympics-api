@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event_h2h',
             name='location',
-            field=models.CharField(blank=True, null=True),
+            field=models.CharField(max_length=250, blank=True, null=True),
         ),
         migrations.AddField(
             model_name='event_h2h',
@@ -25,7 +25,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event_ind',
             name='location',
-            field=models.CharField(blank=True, null=True),
+            field=models.CharField(max_length=250, blank=True, null=True),
         ),
         migrations.AddField(
             model_name='event_ind',
@@ -35,7 +35,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='event_team',
             name='location',
-            field=models.CharField(blank=True, null=True),
+            field=models.CharField(max_length=250, blank=True, null=True),
         ),
         migrations.AddField(
             model_name='event_team',

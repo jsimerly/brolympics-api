@@ -248,8 +248,6 @@ class GetBrolympicsHome(APIView):
         brolympics = get_object_or_404(Brolympics, uuid=uuid)
         serializer = self.serializer_class(brolympics, context={'request':request})
 
-        ## Need a new serializer to get active events
-        #this will need to be a check, then we feed it to a different serializer to get the information we need. [pre, active, post]
         return Response(serializer.data, status=status.HTTP_200_OK)
     
 class GetUpcoming(APIView):

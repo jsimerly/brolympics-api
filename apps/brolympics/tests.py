@@ -2,7 +2,6 @@ from django.test import TestCase
 from django.utils import timezone
 from apps.brolympics.models import *
 from django.contrib.auth import get_user_model
-from django.db import transaction
 from unittest.mock import patch
 
 User = get_user_model()

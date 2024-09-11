@@ -1,10 +1,7 @@
 from .base import *
 from dotenv import load_dotenv
 
-from .base import *
-from dotenv import load_dotenv
-
-dotenv_path = BASE_DIR / '.env.dev'
+dotenv_path = BASE_DIR / '.env'
 load_dotenv(dotenv_path)
 
 SECRET_KEY = os.environ.get("SECRET_KEY")

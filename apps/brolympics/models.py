@@ -240,7 +240,7 @@ class EventAbstactBase(models.Model):
 
     uuid = models.UUIDField(unique=True, editable=False, default=uuid4)
 
-    location = models.CharField(null=True, blank=True)
+    location = models.CharField(max_length=260,null=True, blank=True)
     rules = RichTextField(null=True, blank=True)
 
     class Meta:
