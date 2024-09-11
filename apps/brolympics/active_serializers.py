@@ -237,7 +237,7 @@ class TeamPageSerailizer(serializers.ModelSerializer):
     player_2 = PlayerSerializer()
     class Meta:
         model = Team
-        fields = ['name', 'player_1', 'player_2', 'overall_ranking']
+        fields = ['name', 'player_1', 'player_2', 'overall_ranking', 'img']
 
     def get_overall_ranking(self, obj):
         bro_rankings = obj.brolympics.overall_ranking.filter(team=obj)

@@ -218,10 +218,11 @@ class BrolympicsSerializer(serializers.ModelSerializer):
     projected_end_date = DateTimeLocalField()
     is_owner = serializers.SerializerMethodField()
     user_team = serializers.SerializerMethodField()
+    league_owner = serializers.SerializerMethodField()
 
     class Meta:
         model = Brolympics
-        fields = ['name', 'is_registration_open', 'projected_start_date', 'projected_end_date', 'start_time', 'end_time', 'is_complete', 'winner', 'uuid', 'img', 'teams', 'events', 'is_owner', 'is_active', 'user_team']
+        fields = ['name', 'is_registration_open', 'projected_start_date', 'projected_end_date', 'start_time', 'end_time', 'is_complete', 'winner', 'uuid', 'img', 'teams', 'events', 'is_owner', 'is_active', 'user_team', 'league_owner']
 
     def get_teams(self, obj):
         return TeamSerializer(obj.teams.all(), many=True, context=self.context).data
@@ -245,6 +246,11 @@ class BrolympicsSerializer(serializers.ModelSerializer):
         team = Team.objects.filter(Q(player_1=user) | Q(player_2=user), brolympics=obj)
         if team.exists():
             return TeamSerializer(team.first(), context=self.context).data
+        return None
+    
+    def get_league_owner(self, obj):
+        if obj.league:
+            return PlayerSerializer(obj.league.league_owner).data
         return None
 
 class LeagueInfoSerializer(serializers.ModelSerializer):
