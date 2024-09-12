@@ -403,14 +403,14 @@ class UpdateLeague(APIView):
     def delete(self, request):
         uuid = request.query_params.get('uuid')
         league = get_object_or_404(League, uuid=uuid)
-        print(uuid)
-
+    
         if request.user != league.league_owner:
             return Response({"detail": "Not authorized"}, status=status.HTTP_403_FORBIDDEN)
         
         try:
-            league_info = LeagueInfoSerializer(league).data
+            league_info = LeagueInfoSerializer(league, context={'request': request}).data
             league.delete()
+
 
             return Response({
                 "message": "League successfully deleted",
