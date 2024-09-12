@@ -23,7 +23,6 @@ class StartBrolympics(APIView):
             raise PermissionDenied('You do not have permission to start this Brolympcs.')
         
         return brolympics
-
         
     def put(self, request):
         uuid = request.data.get('uuid')
