@@ -260,16 +260,23 @@ class EventAbstactBase(models.Model):
         self.create_child_objects()
         self.save()
 
-    def _get_score_to_rank(self):
+    def _get_score_to_rank(self, team_n_override=None):
+        score_map = defaultdict()
         n_teams = len(self.brolympics.teams.all())
-        score_map = {
-            1 : n_teams+2,
-            2 : n_teams,
-            3 : n_teams-1,
-        }
+        if team_n_override:
+            n_teams = team_n_override
 
-        for i in range(3, n_teams):
-            score_map[i+1] = n_teams-i
+        for i in range(n_teams):
+            rank = i+1
+            score = n_teams - i
+            if rank == 1:
+                score += 4
+            if rank == 2:
+                score += 2
+            if rank == 3:
+                score += 1
+            
+            score_map[rank] = score         
 
         return score_map
 

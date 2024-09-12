@@ -277,8 +277,8 @@ class Event_TeamUtilityTests(TestCase):
     def test_get_score_to_rank(self):
         score_to_rank = self.team_event._get_score_to_rank()
         expected_score_to_rank = {
-            1: 10, 
-            2: 8, 
+            1: 12, 
+            2: 9, 
             3: 7,  
             4: 5,  
             5: 4,  
@@ -287,6 +287,19 @@ class Event_TeamUtilityTests(TestCase):
             8: 1,
         }
         self.assertEqual(score_to_rank, expected_score_to_rank)
+
+        score_to_rank = self.team_event._get_score_to_rank(9)
+        expected_score_to_rank = {
+            1: 13,
+            2: 10,
+            3: 8,
+            4: 6,
+            5: 5,
+            6: 4,
+            7: 3,
+            8: 2,
+            9: 1,
+        }
 
 class Event_TeamLifeCycleTests(TestCase):
     def setUp(self):    
@@ -462,7 +475,7 @@ class Event_TeamLifeCycleTests(TestCase):
         team_rankings = self.team_event.event_team_event_rankings.all()
 
         for i, team in enumerate(team_rankings):
-            expected_points = 7.5 if i%2 == 0 else 2.5
+            expected_points = 8.25 if i%2 == 0 else 2.5
             expected_rank = 1 if i%2 == 0 else 5
             self.assertEqual(team.points, expected_points)
             self.assertEqual(team.rank, expected_rank)
@@ -470,8 +483,8 @@ class Event_TeamLifeCycleTests(TestCase):
         single_ordered_teams = [[team_rankings[0]],[team_rankings[1]],[team_rankings[2]],[team_rankings[3]],[team_rankings[4]],[team_rankings[5]],[team_rankings[6]],[team_rankings[7]],]
 
         expected_points_map = {
-            1: 10, 
-            2: 8, 
+            1: 12, 
+            2: 9, 
             3: 7,  
             4: 5,  
             5: 4,  
@@ -634,8 +647,8 @@ class Event_INDUtilityTests(TestCase):
     def test_get_score_to_rank(self):
         score_to_rank = self.ind_event._get_score_to_rank()
         expected_score_to_rank = {
-            1: 10, 
-            2: 8, 
+            1: 12, 
+            2: 9, 
             3: 7,  
             4: 5,  
             5: 4,  
@@ -827,7 +840,7 @@ class Event_INDLifeCycleTests(TestCase):
         team_rankings = self.ind_event.event_ind_event_rankings.all()
 
         for i, team in enumerate(team_rankings):
-            expected_points = 7.5 if i%2 == 0 else 2.5
+            expected_points = 8.25 if i%2 == 0 else 2.5
             expected_rank = 1 if i%2 == 0 else 5
 
             self.assertEqual(team.points, expected_points)
@@ -836,8 +849,8 @@ class Event_INDLifeCycleTests(TestCase):
         single_ordered_teams = [[team_rankings[0]],[team_rankings[1]],[team_rankings[2]],[team_rankings[3]],[team_rankings[4]],[team_rankings[5]],[team_rankings[6]],[team_rankings[7]],]
 
         expected_points_map = {
-            1: 10, 
-            2: 8, 
+            1: 12, 
+            2: 9, 
             3: 7,  
             4: 5,  
             5: 4,  
@@ -1028,8 +1041,8 @@ class Event_H2HUtilityTests(TestCase):
     def test_get_score_to_rank(self):
         score_to_rank = self.h2h_event._get_score_to_rank()
         expected_score_to_rank = {
-            1: 10, 
-            2: 8, 
+            1: 12, 
+            2: 9, 
             3: 7,  
             4: 5,  
             5: 4,  
@@ -1144,11 +1157,11 @@ class Event_H2HLifeCycleTests(TestCase):
         self.assertEqual(rank_2, t_2_rankings)
         self.assertEqual(rank_3, t_3_rankings)
         self.assertEqual(rank_4, t_4_rankings)
-        self.assertEqual(10, t_1_rankings.points)
-        self.assertEqual(8, t_2_rankings.points)
+        self.assertEqual(12, t_1_rankings.points)
+        self.assertEqual(9, t_2_rankings.points)
         self.assertEqual(7, t_3_rankings.points)
         self.assertEqual(5, t_4_rankings.points)
-        pass
+
 
     def test_update_sos(self):
         team_1 = self.teams[0]

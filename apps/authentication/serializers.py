@@ -6,7 +6,7 @@ class UserSerializer(serializers.ModelSerializer):
     img = serializers.ImageField(read_only=True)
     class Meta:
         model = FirebaseUser
-        fields = ['uid', 'email', 'phone', 'first_name', 'last_name', 'display_name', 'img', 'is_available', 'date_joined', 'account_complete']
+        fields = ['uid', 'email', 'phone', 'first_name', 'last_name', 'display_name', 'img', 'is_available', 'date_joined', 'account_complete', 'provider']
 
     def get_account_complete(self, obj):
         return bool(obj.display_name and obj.first_name and obj.last_name)
