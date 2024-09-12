@@ -632,16 +632,16 @@ class DeleteTeam(APIView):
 class RemovePlayerFromTeam(APIView):
     permission_classes = [IsAuthenticated]
 
-    def get_object(self, player_uuid, team_uuid):
-        player = get_object_or_404(User, uuid=player_uuid)
+    def get_object(self, player_uid, team_uuid):
+        player = get_object_or_404(User, uid=player_uid)
         team = get_object_or_404(Team, uuid=team_uuid)
 
         if self.request.user != team.player_1 and self.request.user != team.player_2 and self.request.user !=  team.brolympics.league.league_owner:
             raise PermissionDenied("You do not have permission to remove this player from this team.")
         return player, team     
 
-    def delete(self, request, player_uuid, team_uuid):
-        player, team = self.get_object(player_uuid, team_uuid)
+    def delete(self, request, player_uid, team_uuid):
+        player, team = self.get_object(player_uid, team_uuid)
         team.remove_player(player)
 
         return Response(status=status.HTTP_204_NO_CONTENT)

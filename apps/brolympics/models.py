@@ -104,6 +104,13 @@ class Brolympics(models.Model):
         team_events = self.event_team_set.filter(is_active=True)
 
         return {'h2h':h2h_events, 'ind':ind_events, 'team':team_events}
+    
+    def get_upcoming_events(self):
+        h2h_events = self.event_h2h_set.filter(is_active=False, is_complete=False)
+        ind_events = self.event_ind_set.filter(is_active=False, is_complete=False)
+        team_events = self.event_team_set.filter(is_active=False, is_complete=False)
+
+        return {'h2h':h2h_events, 'ind':ind_events, 'team':team_events}
 
     def _is_duplicate(self, team_1, team_2, pairs_set):
         return (team_1, team_2) in pairs_set or (team_2, team_1) in pairs_set
@@ -735,38 +742,61 @@ class Event_H2H(EventAbstactBase):
         self.create_bracket()
 
     def create_competition_objs_h2h(self):
+        pairs = self._create_team_pairs()
+        competitions = [
+            Competition_H2H(event=self, team_1=pair[0], team_2=pair[1])
+            for pair in pairs
+        ]
+        Competition_H2H.objects.bulk_create(competitions)
+
+    def create_competition_objs_h2h(self):
         teams = list(self.brolympics.teams.all())
         random.shuffle(teams)
         matchups = self.create_matchups(teams)
         
         competitions = []
-        for round_matchups in matchups:
-            for team1, team2 in round_matchups:
-                competitions.append(Competition_H2H(event=self, team_1=team1, team_2=team2))
+        for team1, team2 in matchups:
+            competitions.append(Competition_H2H(event=self, team_1=team1, team_2=team2))
         
         Competition_H2H.objects.bulk_create(competitions)
 
+
     def create_matchups(self, teams):
-        n_teams = len(teams)
-        if n_teams % 2 == 1:
-            teams = teams + [None]  # Add a bye
-            n_teams += 1
+        n_team = len(teams)
+        left_overs = []
+        matchups_per_round = n_team//2
+        n_matches = self.n_matches
 
-        n_rounds = min(self.n_matches, n_teams - 1)
         matchups = []
+        for i in range(n_matches):
+            top = [-1] * matchups_per_round
+            bottom = [-1] * matchups_per_round
+            on_top = True
+            count = 0
 
-        for round in range(n_rounds):
-            round_matchups = []
-            for i in range(n_teams // 2):
-                team1 = teams[i]
-                team2 = teams[n_teams - 1 - i]
-                if team1 is not None and team2 is not None:
-                    round_matchups.append((team1, team2))
-            matchups.append(round_matchups)
-            teams = [teams[0]] + [teams[-1]] + teams[1:-1]
+            for team in teams:
+                if on_top and count >= matchups_per_round:
+                    count = 0
+                    on_top = False
+                elif not on_top and count >= matchups_per_round:
+                    left_overs.append(team)
+                    break
+
+                if on_top:
+                    top[count] = team
+                else:
+                    bottom[matchups_per_round-1-count] = team
+
+                count += 1
+
+            teams = [teams[-1]] + teams[:-1]
+            round = [comp for comp in zip(top, bottom)]
+            matchups.extend(round)
+
+        for i in range(0, len(left_overs), 2):
+            matchups.append((left_overs[i], left_overs[i+1]))
 
         return matchups
-                       
 
     def create_event_ranking_h2h(self):
         ranking_objs = [

@@ -3,34 +3,39 @@ from django.contrib.auth import get_user_model
 from apps.brolympics.models import *
 from django.core.exceptions import ObjectDoesNotExist
 from django.shortcuts import get_object_or_404
-from apps.brolympics.serializers import CompetitionSerializer_H2h, CompetitionSerializer_Ind, CompetitionSerializer_Team, BracketCompetitionSerializer_H2h, PlayerSerializer
+from apps.brolympics.serializers import CompetitionSerializer_H2h, CompetitionSerializer_Ind, CompetitionSerializer_Team, BracketCompetitionSerializer_H2h, PlayerSerializer, DateTimeLocalField
 
 class HomeEventSerializer_H2h(serializers.ModelSerializer):
     percent_complete = serializers.SerializerMethodField()
+    projected_start_date = DateTimeLocalField()
+    projected_end_date = DateTimeLocalField()
 
     class Meta:
         model = Event_H2H
-        fields = ['name', 'uuid', 'percent_complete', 'start_time']
+        fields = ['name', 'uuid', 'percent_complete', 'start_time', 'projected_start_date', 'projected_end_date']
 
     def get_percent_complete(self, obj):
         return obj.get_percent_complete()
     
 class HomeEventSerializer_Ind(serializers.ModelSerializer):
     percent_complete = serializers.SerializerMethodField()
-
+    projected_start_date = DateTimeLocalField()
+    projected_end_date = DateTimeLocalField()
     class Meta:
         model = Event_IND
-        fields = ['name', 'uuid', 'percent_complete', 'start_time']
+        fields = ['name', 'uuid', 'percent_complete', 'start_time', 'projected_start_date', 'projected_end_date']
 
     def get_percent_complete(self, obj):
         return obj.get_percent_complete()
     
 class HomeEventSerializer_Team(serializers.ModelSerializer):
     percent_complete = serializers.SerializerMethodField()
+    projected_start_date = DateTimeLocalField()
+    projected_end_date = DateTimeLocalField()
 
     class Meta:
         model = Event_Team
-        fields = ['name', 'uuid', 'percent_complete', 'start_time']
+        fields = ['name', 'uuid', 'percent_complete', 'start_time', 'projected_start_date', 'projected_end_date']
 
     def get_percent_complete(self, obj):
         return obj.get_percent_complete()

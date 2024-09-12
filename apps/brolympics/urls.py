@@ -33,7 +33,7 @@ urlpatterns = [
     #Delete
     path('delete-brolympics/<uuid:uuid>', DeleteBrolymics.as_view(), name='delete_brolympics'),
     path('delete-team/<uuid:uuid>', DeleteTeam.as_view(), name='delete_team'),
-    path('remove-player-team/<uuid:player_uuid>/<uuid:team_uuid>', RemovePlayerFromTeam.as_view(), name='remove_player_from_team'),
+    path('remove-player-team/<str:player_uid>/<uuid:team_uuid>', RemovePlayerFromTeam.as_view(), name='remove_player_from_team'),
     path('delete-event-ind/<uuid:uuid>', DeleteIndEvent.as_view(), name='delete_event_ind'),
     path('delete-event-team/<uuid:uuid>', DeleteTeamEvent.as_view(), name='delete_event_team'),
     path('delete-event-h2h/<uuid:uuid>', DeleteH2hEvent.as_view(), name='delete_event_h2h'),

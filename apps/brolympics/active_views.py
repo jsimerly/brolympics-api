@@ -118,7 +118,7 @@ class GetActiveHome(APIView):
             for event in qset
         ]
         return active
-
+    
     def get(self, request, uuid):
         brolympics = self.get_object(uuid)  
         event_map = brolympics.get_active_events()
@@ -222,11 +222,33 @@ class GetActiveHome(APIView):
         ] 
 
         all_active_data = h2h_active_serialized + ind_active_serialized + team_active_serialized + bracket_active_serialized
-       
+
+        #Upcoming Events
+        upcoming_map = brolympics.get_upcoming_events()
+        up_h2h = upcoming_map['h2h']
+        up_ind = upcoming_map['ind']
+        up_team = upcoming_map['team']
+
+        up_h2h_event_serialized = HomeEventSerializer_H2h(
+            up_h2h, 
+            many=True, 
+            ).data
+        up_ind_event_serialized = HomeEventSerializer_Ind(
+            up_ind, 
+            many=True
+            ).data
+        up_team_event_serialized = HomeEventSerializer_Team(
+            up_team, 
+            many=True
+            ).data
+
+        upcoming_events = up_h2h_event_serialized + up_ind_event_serialized + up_team_event_serialized
+
         data = {
             'active_events' : all_serialized,
             'available_competitions' : available_comps + h2h_bracket_serialized,
-            'active_competitions' : all_active_data
+            'active_competitions' : all_active_data,
+            'upcoming_events': upcoming_events,
         }
 
         return Response(data ,status=status.HTTP_200_OK)

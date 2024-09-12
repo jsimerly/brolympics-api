@@ -1,9 +1,12 @@
 from firebase_admin import auth, storage
 from rest_framework import authentication, exceptions
 from django.contrib.auth import get_user_model
+from django.db import IntegrityError
 
 
 User = get_user_model()
+
+from django.db import IntegrityError
 
 class FirebaseAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
@@ -20,21 +23,24 @@ class FirebaseAuthentication(authentication.BaseAuthentication):
             raise exceptions.AuthenticationFailed("Invalid Token")
         
         try:
-            user = User.objects.get(uid=uid)        
-        except User.DoesNotExist:
-            user = User(uid=uid)
-            if 'name' in decoded_token:
-                user.display_name = decoded_token['name']
-            if 'email' in decoded_token:
-                user.email = decoded_token['email']
-            if 'phone_number' in decoded_token:
-                user.phone_number = decoded_token['phone_number']
-            if 'picture' in decoded_token:
-                user.img_url = decoded_token['picture']
-            if 'firebase' in decoded_token and 'sign_in_provider' in decoded_token['firebase']:
-                user.provider = decoded_token['firebase']['sign_in_provider']
-            user.save()
+            user, created = User.objects.get_or_create(uid=uid)
+            if created:
+                if 'name' in decoded_token:
+                    user.display_name = decoded_token['name']
+                if 'email' in decoded_token:
+                    user.email = decoded_token['email']
+                if 'phone_number' in decoded_token:
+                    user.phone_number = decoded_token['phone_number']
+                if 'picture' in decoded_token:
+                    user.img_url = decoded_token['picture']
+                if 'firebase' in decoded_token and 'sign_in_provider' in decoded_token['firebase']:
+                    user.provider = decoded_token['firebase']['sign_in_provider']
+                user.save()
+        
+        except IntegrityError:
+            raise exceptions.AuthenticationFailed("User with this UID already exists")
 
         return user, id_token
+
 
         

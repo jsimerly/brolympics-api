@@ -3,6 +3,7 @@ from django.utils import timezone
 from apps.brolympics.models import *
 from django.contrib.auth import get_user_model
 from unittest.mock import patch
+from collections import defaultdict
 
 User = get_user_model()
 
@@ -886,7 +887,7 @@ class Event_H2HInitializationTests(TestCase):
             league=self.league, 
             name='Test Brolympics',
         )
-        self.teams = [Team.objects.create(brolympics=self.brolympics, name=f'Team {i+1}', is_available=(i%2==0), player_1=self.user) for i in range(8)]
+        self.teams = [Team.objects.create(brolympics=self.brolympics, name=f'Team {i+1}', is_available=(i%2==0), player_1=self.user) for i in range(9)]
         self.h2h_event = Event_H2H.objects.create(
             brolympics=self.brolympics,
             name="test event",
@@ -895,45 +896,65 @@ class Event_H2HInitializationTests(TestCase):
 
     def test_create_competition_objs_h2h(self):
         self.h2h_event.create_competition_objs_h2h()
+        
+        # Get all competitions for this event
+        competitions = Competition_H2H.objects.filter(event=self.h2h_event)
+        
+        # Count the number of competitions each team is involved in
+        team_competition_count = {}
+        for comp in competitions:
+            team_competition_count[comp.team_1] = team_competition_count.get(comp.team_1, 0) + 1
+            team_competition_count[comp.team_2] = team_competition_count.get(comp.team_2, 0) + 1
+        
+        # Check that each team participates in exactly n_matches competitions
+        for team in self.brolympics.teams.all():
+            self.assertEqual(
+                team_competition_count.get(team, 0),
+                self.h2h_event.n_matches,
+                f"Team {team} should participate in exactly {self.h2h_event.n_matches} competitions"
+        )
+    
+        # Additional check for the total number of competitions (optional, but good to keep)
         n_teams = len(self.brolympics.teams.all())
-        n_rounds = min(self.h2h_event.n_matches, n_teams - 1 if n_teams % 2 == 1 else n_teams - 2)
-        expected_comps = (n_rounds * n_teams) // 2 
-        created_comps = Competition_H2H.objects.filter(event=self.h2h_event).count()
-        self.assertEqual(expected_comps, created_comps)
+        expected_comps = (self.h2h_event.n_matches * n_teams) // 2 
+        self.assertEqual(
+            expected_comps,
+            competitions.count(),
+            f"Total number of competitions should be {expected_comps}"
+        )
 
     def test_create_matchups(self):
         teams = list(self.brolympics.teams.all())
         matchups = self.h2h_event.create_matchups(teams)
 
+        # Test proper number of matches created
         n_teams = len(teams)
-        n_rounds = min(self.h2h_event.n_matches, n_teams - 1 if n_teams % 2 == 1 else n_teams - 2)
-        
-        # Check number of rounds
-        self.assertEqual(len(matchups), n_rounds)
+        expected_matches = self.h2h_event.n_matches * n_teams / 2
+        self.assertEqual(len(matchups), expected_matches)
 
+        # Test if there are any duplicate matches
         seen_pairs = set()
-        team_match_count = {team: 0 for team in teams}
+        duplicates = []
 
-        for round_matchups in matchups:
-            # Check number of matches in each round
-            expected_matches = n_teams // 2
-            self.assertEqual(len(round_matchups), expected_matches)
+        for matchup in matchups:
+            frozen_matchup = frozenset(matchup)
+            if frozen_matchup in seen_pairs:
+                duplicates.append(matchup)
+            else:
+                seen_pairs.add(frozen_matchup)
 
-            for team1, team2 in round_matchups:
-                # Check for unique pairs
-                pair_set = frozenset([team1, team2])
-                self.assertNotIn(pair_set, seen_pairs, f"Duplicate pair found: {team1} vs {team2}")
-                seen_pairs.add(pair_set)
+        self.assertEqual([], duplicates)
 
-                # Count matches for each team
-                team_match_count[team1] += 1
-                team_match_count[team2] += 1
 
-        # Check if each team plays the correct number of matches
-        expected_matches_per_team = n_rounds
-        for team, count in team_match_count.items():
-            self.assertEqual(count, expected_matches_per_team, 
-                             f"{team} played {count} matches, expected {expected_matches_per_team}")
+        # Test Teams have correct number of matches
+        counter = defaultdict(int)
+        for t1, t2 in matchups:
+            counter[t1] += 1
+            counter[t2] += 1
+
+        self.assertEqual(max(counter.values()), min(counter.values()))
+        self.assertEqual(self.h2h_event.n_matches, max(counter.values()))
+        
 
     def test_create_event_ranking_h2h(self):
         self.h2h_event.create_event_ranking_h2h()
