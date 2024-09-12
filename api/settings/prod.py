@@ -60,9 +60,10 @@ CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = [
     "https://brolympics-api-s7dp3idmra-ul.a.run.app",
     "https://brolympics-api-708202517048.us-east5.run.app",
-    "https://brolympics-frontend-708202517048.us-central1.run.app", #UPDATE
-    "https://brolympics-frontend-s7dp3idmra-uc.a.run.app", #UPDATE
+    "https://brolympics-frontend-708202517048.us-central1.run.app",
+    "https://brolympics-frontend-s7dp3idmra-uc.a.run.app",
     "https://brolympic.com", 
+    "https://thebrolympics.com"
 ]
 
 
