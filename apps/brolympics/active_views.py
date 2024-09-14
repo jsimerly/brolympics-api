@@ -649,3 +649,10 @@ class GetStandingsInfo(APIView):
         return Response(data, status=status.HTTP_200_OK)
 
 
+class ForceOverallUpdate(APIView):
+    def put(self, request, uuid):
+        brolympics = get_object_or_404(Brolympics, uuid=uuid)
+        brolympics.force_full_rankings_update()
+
+        return Response(status=status.HTTP_200_OK)
+

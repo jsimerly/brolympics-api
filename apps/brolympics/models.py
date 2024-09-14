@@ -122,6 +122,35 @@ class Brolympics(models.Model):
         ordered_teams = self._order_by_score(points_map)
         self._set_rankings(ordered_teams)
 
+    def force_full_rankings_update(self):
+        all_events = self.get_all_events()
+
+        new_scores = defaultdict(int)
+        for h2h_event in all_events['h2h']:
+            for team_ranking in h2h_event.event_h2h_event_rankings.all():
+                new_scores[team_ranking.team] += team_ranking.points
+
+        for ind_event in all_events['ind']:
+            for team_ranking in ind_event.event_ind_event_rankings.all():
+                new_scores[team_ranking.team] += team_ranking.points
+
+        for team_event in all_events['team']:
+            for team_ranking in team_event.event_team_event_rankings.all():
+                new_scores[team_ranking.team] += team_ranking.points
+
+        overall_rankings = self.overall_ranking.all()
+        for ranking in overall_rankings:
+            ranking.total_points = new_scores[ranking.team]
+            ranking.save()
+    
+        self.update_ranks()
+
+
+
+
+
+
+
     def _group_by_score(self, overall_rankings):
         score_to_team = {}
 

@@ -63,6 +63,7 @@ urlpatterns = [
     path('cancel-competition-h2h/', CancelCompH2h.as_view(), name='end_comp_h2h'),
     path('cancel-competition-ind/', CancelCompInd.as_view(), name='end_comp_ind'),
     path('cancel-competition-team/', CancelCompTeam.as_view(), name='end_comp_team'),
+    path('force-update-overall/<uuid:uuid>', ForceOverallUpdate.as_view(), name='force_update'),
 
         # Teams
     path('get-team-info/<uuid:uuid>', GetTeamInfo.as_view(), name='get_team_info' ),
